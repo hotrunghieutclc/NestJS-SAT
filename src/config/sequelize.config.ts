@@ -1,6 +1,7 @@
 import { ConfigService } from "@nestjs/config"
 import { SequelizeModuleOptions } from "@nestjs/sequelize"
 import { Dialect } from "sequelize"
+import { AIEvualuation, Cache, IRLParameter, Question, QuestionChoice, TestResponse, TestSession, User } from "src/models"
 
 export const sequelizeConfig = (configService: ConfigService): SequelizeModuleOptions => ({
     database: configService.get<string>('DB_NAME'),
@@ -13,6 +14,13 @@ export const sequelizeConfig = (configService: ConfigService): SequelizeModuleOp
     autoLoadModels: true,
     logging: false,
     models: [
-     
+        AIEvualuation,
+        Cache,
+        IRLParameter,
+        QuestionChoice,
+        Question,
+        TestResponse,
+        TestSession,
+        User
     ]
 })
