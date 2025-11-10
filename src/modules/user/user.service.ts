@@ -14,8 +14,12 @@ export class UserService {
         return this.userModel.findOne({ where: {email}});
     }
 
+    async findByUsername(username: string) {
+        return this.userModel.findOne({ where: {username}});
+    }
+
     async register(createUserDto: CreateUserDto) {
-        const user = await this.findByEmail(createUserDto.email)
+        const user = await this.findByEmail(createUserDto.email) || await this.findByUsername(createUserDto.username);
 
         if(user) {
             throw new BadRequestException('Email đã tồn tại')
