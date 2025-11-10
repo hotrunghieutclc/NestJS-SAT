@@ -4,6 +4,8 @@ import { SequelizeModule, SequelizeModuleOptions } from '@nestjs/sequelize';
 import { StartTimingMiddleware } from './common/middlewares/start-timing.middleware';
 import { JwtModule, } from '@nestjs/jwt';
 import { sequelizeConfig } from './config/sequelize.config';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 
 @Module({
@@ -24,6 +26,8 @@ import { sequelizeConfig } from './config/sequelize.config';
       }),
       global: true,
     }),
+    UserModule,
+    AuthModule,
   ],
 })
 export class AppModule implements NestModule{
