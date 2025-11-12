@@ -3,11 +3,13 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/models';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User) private readonly userModel: typeof User, 
+        private readonly jwtService: JwtService
     ) {}
 
     async findByEmail(email: string) {
@@ -25,17 +27,10 @@ export class UserService {
             throw new BadRequestException('Email đã tồn tại')
         }
 
-        const hashedPassword = bcrypt.hashSync(createUserDto.password, 10)
-        const payload = {
-            ...createUserDto,
-            password: hashedPassword
-        }
-
-        await this.userModel.create(payload as any);
+        await this.userModel.create(createUserDto as any);
 
         return {
             message: 'Đăng ký thành công',
-            data: payload
         }
     }
 
@@ -43,15 +38,13 @@ export class UserService {
         const user = await this.findByEmail(email);
 
         if(!user) {
-            throw new BadRequestException('Email không tồn tại');
+            throw new BadRequestException('Tài khoản chưa được đăng ký.');
         }
 
         const isCorrectPassword = user.comparePassword(password);
         if(!isCorrectPassword) {
             throw new BadRequestException('Mật khẩu không chính xác.');
         }
-
-        const { password: _, ...rest} = user;
         return user;
     }
 }

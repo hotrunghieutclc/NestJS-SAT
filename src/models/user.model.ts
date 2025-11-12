@@ -29,12 +29,7 @@ export class User extends Model<User> {
 
     comparePassword(password: string) {
         const {password: passwordInDb} = this.get({plain: true});
-        return bcrypt.compare(password, passwordInDb);
-    }
-
-    getUserWithoutPassword() {
-        const {password: _, ...rest} = this.get({plain: true});
-        return rest;
+        return bcrypt.compareSync(password, passwordInDb);
     }
 
     @BeforeValidate
