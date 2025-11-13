@@ -11,7 +11,6 @@ export class Cache extends Model<Cache> {
 
     @Column({
         allowNull: false,
-        unique: true,
         type: DataType.STRING
     })
     model: string;
