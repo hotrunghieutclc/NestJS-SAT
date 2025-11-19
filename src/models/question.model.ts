@@ -6,7 +6,7 @@ import { QuestionChoice } from "./question-choice.model";
 @Table
 export class Question extends Model<Question> {
     @Column({
-        allowNull: true,
+        allowNull: false,
         unique: true,
         type: DataType.INTEGER,
     })
