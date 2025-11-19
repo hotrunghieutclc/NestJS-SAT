@@ -7,6 +7,7 @@ import { sequelizeConfig } from './config/sequelize.config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CacheModule } from './modules/cache/cache.module';
+import { QuestionModule } from './modules/question/question.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { CacheModule } from './modules/cache/cache.module';
     UserModule,
     AuthModule,
     CacheModule,
+    QuestionModule,
   ],
 })
 export class AppModule implements NestModule{
