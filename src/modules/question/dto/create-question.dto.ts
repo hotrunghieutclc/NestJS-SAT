@@ -1,4 +1,4 @@
-import { ArrayNotRequired, BooleanNotRequired, NumberRequired, StringNotRequired, StringRequired } from "src/common/decorators";
+import { ArrayNotRequired, BooleanNotRequired, NumberNotRequired, NumberRequired, StringNotRequired, StringRequired } from "src/common/decorators";
 
 export class QuestionChoiceDto {
     @StringRequired('Nội dung câu trả lời')
@@ -14,20 +14,20 @@ export class CreateQuestionDto {
     @StringRequired('Nội dung câu hỏi')
     content: string;
 
-    @NumberRequired('Mã câu hỏi')
-    hashId: number;
+    @NumberNotRequired("Mã")
+    hashId?: number;
 
-    @StringNotRequired()
-    section?: string;
+    @StringRequired("Phạm vi")
+    section: string;
 
-    @StringNotRequired()
-    skill?: string;
+    @StringRequired("Kỹ năng")
+    skill: string;
 
     @StringNotRequired()
     passage?: string;
 
-    @StringNotRequired()
-    difficulty?: string;
+    @StringRequired("Độ khó")
+    difficulty: string;
 
     @StringNotRequired()
     model?: string;

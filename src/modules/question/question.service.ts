@@ -36,17 +36,9 @@ export class QuestionService {
         })
     }
 
-    async findQuestionByHashId(hashId: number) {
-        return this.questionModel.findOne({ raw: true, where: { hashId}})
-    }
-
     async createQuestion(createQuestionDto: CreateQuestionDto) {
         const t = await this.sequelize.transaction();
         try {
-            const question = await this.findQuestionByHashId(createQuestionDto.hashId);
-            if(question) {
-                throw new BadRequestException('Mã câu hỏi đã được dùng');
-            }
 
             const newQuestion = await this.questionModel.create(createQuestionDto as any, { transaction: t});
 
