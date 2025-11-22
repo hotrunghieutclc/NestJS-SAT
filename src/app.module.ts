@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CacheModule } from './modules/cache/cache.module';
 import { QuestionModule } from './modules/question/question.module';
+import { SeedModule } from './modules/seed/seed.module';
 
 
 @Module({
@@ -32,6 +33,7 @@ import { QuestionModule } from './modules/question/question.module';
     AuthModule,
     CacheModule,
     QuestionModule,
+    SeedModule,
   ],
 })
 export class AppModule implements NestModule{
