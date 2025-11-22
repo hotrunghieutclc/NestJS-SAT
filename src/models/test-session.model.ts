@@ -1,4 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { User } from "./user.model";
 import { AIEvualuation } from "./ai-evaluation.model";
 import { TestResponse } from "./test-response.model";
@@ -6,8 +6,8 @@ import { TestResponse } from "./test-response.model";
 @Table
 export class TestSession extends Model<TestSession>{
     @Column({
-        allowNull: false,
         type: DataType.DATE,
+        defaultValue: DataType.NOW
     })
     startedAt: Date;
     
@@ -39,8 +39,8 @@ export class TestSession extends Model<TestSession>{
     @BelongsTo(() => User)
     user: User;
 
-    @HasMany(() => AIEvualuation)
-    aiEvaluations: AIEvualuation[];
+    @HasOne(() => AIEvualuation)
+    aiEvaluation: AIEvualuation;
 
     @HasMany(() => TestResponse)
     testResponses: TestResponse[];

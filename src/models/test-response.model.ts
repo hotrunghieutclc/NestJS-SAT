@@ -18,7 +18,7 @@ export class TestResponse  extends Model<TestResponse> {
 
     @Column({
         type: DataType.STRING,
-        allowNull: true
+        allowNull: false
     })
     selectChoiceId: string;
 

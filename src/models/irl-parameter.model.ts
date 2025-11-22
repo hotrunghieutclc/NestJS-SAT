@@ -16,8 +16,8 @@ export class IRLParameter extends Model<IRLParameter> {
     b: number;
 
     @Column({
-        allowNull: false,
-        type: DataType.FLOAT
+        type: DataType.FLOAT,
+        defaultValue: 0.25
     })
     c: number;
 
