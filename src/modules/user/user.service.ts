@@ -20,6 +20,10 @@ export class UserService {
         return this.userModel.findOne({ where: {username}});
     }
 
+    async findById(id: number) {
+        return this.userModel.findOne({ where: {id}});
+    }
+
     async register(createUserDto: CreateUserDto) {
         const user = await this.findByEmail(createUserDto.email) || await this.findByUsername(createUserDto.username);
 
