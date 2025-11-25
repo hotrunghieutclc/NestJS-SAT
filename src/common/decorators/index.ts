@@ -101,3 +101,10 @@ export const CurrentInfo = createParamDecorator(
         return request.user;
     }
 ) 
+
+export const ObjectNotRequired = (type: any) => applyDecorators (
+    ApiProperty({ required: false }),
+    IsOptional(),
+    ValidateNested(),
+    Type(() => type)
+)
