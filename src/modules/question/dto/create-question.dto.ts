@@ -1,4 +1,4 @@
-import { ArrayNotRequired, BooleanNotRequired, NumberNotRequired, NumberRequired, StringNotRequired, StringRequired } from "src/common/decorators";
+import { ArrayNotRequired, BooleanNotRequired, NumberNotRequired, NumberRequired, ObjectNotRequired, StringNotRequired, StringRequired } from "src/common/decorators";
 
 export class QuestionChoiceDto {
     @StringRequired('Nội dung câu trả lời')
@@ -10,6 +10,19 @@ export class QuestionChoiceDto {
     @BooleanNotRequired()
     isCorrect: boolean;
 }
+
+export class IRLParameterDto {
+    @NumberRequired('Chỉ số a')
+    a: number;
+
+    @NumberRequired('Chỉ số b')
+    b: number;
+
+    @NumberNotRequired('Chỉ số c')
+    c?: number
+}
+
+
 export class CreateQuestionDto {
     @StringRequired('Nội dung câu hỏi')
     content: string;
@@ -34,4 +47,7 @@ export class CreateQuestionDto {
 
     @ArrayNotRequired(QuestionChoiceDto)
     questionChoices?: QuestionChoiceDto[];
+
+    @ObjectNotRequired(IRLParameterDto)
+    irlParameter?: IRLParameterDto
 }

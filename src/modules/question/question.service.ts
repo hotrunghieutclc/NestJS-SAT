@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Question, QuestionChoice } from 'src/models';
-import { CreateQuestionDto, QuestionChoiceDto } from './dto/create-question.dto';
+import { IRLParameter, Question, QuestionChoice } from 'src/models';
+import { CreateQuestionDto, IRLParameterDto, QuestionChoiceDto } from './dto/create-question.dto';
 import { Sequelize } from 'sequelize-typescript';
 import { FilterQuestionDto } from './dto/filter-question.dto';
 import { ConfigService } from '@nestjs/config';
@@ -14,6 +14,7 @@ export class QuestionService {
         private readonly configService: ConfigService,
         @InjectModel(Question) private readonly questionModel: typeof Question,
         @InjectModel(QuestionChoice) private readonly questionChoiceModel: typeof QuestionChoice,
+        @InjectModel(IRLParameter) private readonly irlParameterModel: typeof IRLParameter
     ) {}
 
     async findQuestionById(id: number) {
@@ -25,6 +26,12 @@ export class QuestionService {
                         exclude: ['createdAt', 'updatedAt', 'questionId', 'id', 'choiceOrder']
                     },
                     order: ['choiceOrder', 'ASC']
+                },
+                {
+                    model: IRLParameter,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt', 'questionId', 'id']
+                    }
                 }
             ],
             attributes: {
@@ -45,13 +52,21 @@ export class QuestionService {
             // Tạo câu trả lời nếu có
             if(createQuestionDto.questionChoices && createQuestionDto.questionChoices.length > 0 && newQuestion) {
                 const questionId = newQuestion.id || newQuestion.dataValues?.id;
-                console.log(questionId);
                 const questionChoices = createQuestionDto.questionChoices.map((questionChoiceDto: QuestionChoiceDto) => ({
                     ...questionChoiceDto,
                     questionId,
                 }));
-                console.log(questionChoices);
                 await this.questionChoiceModel.bulkCreate(questionChoices as any, {transaction: t});
+            }
+
+            // Tạo parameter
+            if(createQuestionDto.irlParameter && newQuestion) {
+                const questionId = newQuestion.id || newQuestion.dataValues?.id;
+                const irlParameter = {
+                    ...createQuestionDto.irlParameter,
+                    questionId,
+                }
+                await this.irlParameterModel.create(irlParameter as any, {transaction: t})
             }
 
             await t.commit();
