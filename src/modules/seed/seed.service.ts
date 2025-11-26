@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Transaction } from 'sequelize';
 import { AIEvualuation, Cache, IRLParameter, Question, QuestionChoice, TestResponse, TestSession, User } from 'src/models';
-import { questions } from './data';
+import { irtParameters, questionChoices, questions } from './data';
 
 @Injectable()
 export class SeedService {
@@ -24,10 +24,20 @@ export class SeedService {
         return await this.questionModel.bulkCreate(questions as any, { transaction})
     }
 
+    private async seedQuestionChoices(transaction: Transaction) {
+        return await this.questionChoiceModel.bulkCreate(questionChoices as any, { transaction})
+    }
+
+    private async seedIRL(transaction: Transaction) {
+        return await this.irlParameterModel.bulkCreate(irtParameters as any, { transaction})
+    }
+
     async initSeedData() {
         const transaction = await this.sequelize.transaction(); // trả lại các thao tác trước đó
         try {
             await this.seedQuestions(transaction);
+            await this.seedQuestionChoices(transaction);
+            await this.seedIRL(transaction);
 
             await transaction.commit();
             return { message: 'Seed data success'}
