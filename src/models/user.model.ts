@@ -1,5 +1,6 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { TestSession } from "./test-session.model";
+import * as bcrypt from 'bcryptjs';
 
 @Table
 export class User extends Model<User> {
@@ -25,4 +26,12 @@ export class User extends Model<User> {
 
     @HasMany(() => TestSession)
     testSessions: TestSession[];
+
+    comparePassword(password: string) {
+        try {
+            return bcrypt.compareSync(password, this.password as string);
+        } catch (e) {
+            return false;
+        }
+    }
 }

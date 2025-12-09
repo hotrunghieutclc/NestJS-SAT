@@ -6,3 +6,5 @@ export { QuestionChoice } from "./question-choice.model";
 export { TestResponse } from "./test-response.model";
 export { TestSession } from "./test-session.model";
 export { User } from "./user.model";
+export { TestPaper } from "./test-paper.model";
+export { TestPaperItem } from "./test-paper-item.model";
