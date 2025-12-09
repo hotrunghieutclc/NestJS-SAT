@@ -7,7 +7,6 @@ import { QuestionChoice } from "./question-choice.model";
 export class Question extends Model<Question> {
     @Column({
         allowNull: true,
-        unique: true,
         type: DataType.INTEGER,
     })
     hashId: number;
@@ -19,13 +18,13 @@ export class Question extends Model<Question> {
     content: string;
 
     @Column({
-        allowNull: true,
+        allowNull: false,
         type: DataType.STRING,
     })
     section: string;
 
     @Column({
-        allowNull: true,
+        allowNull: false,
         type: DataType.STRING,
     })
     skill: string;
@@ -37,7 +36,7 @@ export class Question extends Model<Question> {
     passage: string;
 
     @Column({
-        allowNull: true,
+        allowNull: false,
         type: DataType.STRING,
     })
     difficulty: string;

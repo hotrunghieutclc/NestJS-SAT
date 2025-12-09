@@ -1,0 +1,238 @@
+{
+  "info": {
+    "name": "NestJS-SAT - TestPaper API",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+    "description": "Collection of requests for TestPaper endpoints (register, login, test-papers). Use environment variable {{baseUrl}} (e.g. http://localhost:3000) and {{token}} for Authorization Bearer token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "User - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"username\": \"user1\",\n  \"password\": \"secret\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/user/register", "host": ["{{baseUrl}}"], "path": ["user","register"] }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Login (save token)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save accessToken to collection variable 'token'",
+              "try {",
+              "  var json = pm.response.json();",
+              "  if(json.accessToken) { pm.collectionVariables.set('token', json.accessToken); }",
+              "} catch(e) { }",
+              "pm.test('status is 200', function() { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Auth - Login Seeded User",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": { "exec": [ "var json = pm.response.json(); if(json.accessToken) { pm.collectionVariables.set('token', json.accessToken); }" ] }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Seeded - Create TestPaper (use seeded items)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Seeded Paper\",\n  \"description\": \"Paper created using seeded items\",\n  \"quantities\": 5\n}" },
+        "url": { "raw": "{{baseUrl}}/test-papers", "host": ["{{baseUrl}}"], "path": ["test-papers"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save created paper id to collection variable 'paperId'",
+              "try {",
+              "  const body = pm.response.json();",
+              "  const id = body?.id || body?.data?.id || body?.result?.id || (body?.data && (body.data.id || body.data?.data?.id));",
+              "  if (id) { pm.collectionVariables.set('paperId', String(id)); console.log('Saved collection variable paperId =', id); } else { console.warn('Create TestPaper response has no id field:', body); }",
+              "} catch (err) { console.error('Cannot parse Create TestPaper response:', err); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Seeded - Add All Seed Items (1..5)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paperId = pm.collectionVariables.get('paperId');",
+              "if (!paperId) { throw new Error(\"paperId not set — run 'Seeded - Create TestPaper (use seeded items)' first.\"); }",
+              "pm.variables.set('paperId', paperId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"itemIds\": [1,2,3,4,5]\n}" },
+        "url": { "raw": "{{baseUrl}}/test-papers/{{paperId}}/items", "host": ["{{baseUrl}}"], "path": ["test-papers","{{paperId}}","items"] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Đề mẫu\",\n  \"description\": \"Mô tả đề\",\n  \"quantities\": 10\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/test-papers", "host": ["{{baseUrl}}"], "path": ["test-papers"] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - List (pagination)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/test-papers?page=1&limit=10", "host": ["{{baseUrl}}"], "path": ["test-papers"], "query": [ { "key": "page", "value": "1" }, { "key": "limit", "value": "10" } ] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - Get By Id",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paperId = pm.collectionVariables.get('paperId');",
+              "if (!paperId) { throw new Error(\"paperId not set — run 'Seeded - Create TestPaper (use seeded items)' first.\"); }",
+              "pm.variables.set('paperId', paperId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/test-papers/{{paperId}}", "host": ["{{baseUrl}}"], "path": ["test-papers","{{paperId}}"] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - Add Items (bulk)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paperId = pm.collectionVariables.get('paperId');",
+              "if (!paperId) { throw new Error(\"paperId not set — run 'Seeded - Create TestPaper (use seeded items)' first.\"); }",
+              "pm.variables.set('paperId', paperId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"itemIds\": [1,2,3]\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/test-papers/{{paperId}}/items", "host": ["{{baseUrl}}"], "path": ["test-papers","{{paperId}}","items"] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - Remove Item",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paperId = pm.collectionVariables.get('paperId');",
+              "if (!paperId) { throw new Error(\"paperId not set — run 'Seeded - Create TestPaper (use seeded items)' first.\"); }",
+              "pm.variables.set('paperId', paperId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/test-papers/{{paperId}}/items/2", "host": ["{{baseUrl}}"], "path": ["test-papers","{{paperId}}","items","2"] }
+      },
+      "response": []
+    },
+    {
+      "name": "TestPaper - Delete Paper",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const paperId = pm.collectionVariables.get('paperId');",
+              "if (!paperId) { throw new Error(\"paperId not set — run 'Seeded - Create TestPaper (use seeded items)' first.\"); }",
+              "pm.variables.set('paperId', paperId);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/test-papers/{{paperId}}", "host": ["{{baseUrl}}"], "path": ["test-papers","{{paperId}}"] }
+      },
+      "response": []
+    }
+  ]
+}
