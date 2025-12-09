@@ -1,11 +1,10 @@
-import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { BeforeValidate, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { TestSession } from "./test-session.model";
 import * as bcrypt from 'bcryptjs';
 
 @Table
 export class User extends Model<User> {
     @Column({
-        allowNull: false,
         unique: true,
         type: DataType.STRING,
     })
@@ -29,9 +28,26 @@ export class User extends Model<User> {
 
     comparePassword(password: string) {
         try {
-            return bcrypt.compareSync(password, this.password as string);
+            const { password: passwordInDb } = this.get({ plain: true }) as any;
+            return bcrypt.compareSync(password, passwordInDb as string);
         } catch (e) {
-            return false;
+            // fallback to raw field
+            try {
+                return bcrypt.compareSync(password, this.password as string);
+            } catch (_) {
+                return false;
+            }
+        }
+    }
+
+    @BeforeValidate
+    static hashPassword(user: User) {
+        if (user.isNewRecord) {
+            const raw = (user.get('password') as any) || '';
+            if (raw) {
+                const hashedPassword = bcrypt.hashSync(raw, 10);
+                user.setDataValue('password', hashedPassword);
+            }
         }
     }
 }

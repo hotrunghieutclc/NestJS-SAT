@@ -11,28 +11,10 @@ export class AIEvualuation extends Model<AIEvualuation> {
 
     @ForeignKey(() => TestSession)
     @Column({
-        allowNull: true,
+        allowNull: false,
         type: DataType.INTEGER,
     })
     sessionId: number;
-
-    @Column({
-        allowNull: true,
-        type: DataType.STRING,
-    })
-    model: string;
-
-    @Column({
-        allowNull: true,
-        type: DataType.STRING,
-    })
-    prompt: string;
-
-    @Column({
-        allowNull: true,
-        type: DataType.INTEGER,
-    })
-    token: string;
 
     @BelongsTo(() => TestSession)
     testSession: TestSession;

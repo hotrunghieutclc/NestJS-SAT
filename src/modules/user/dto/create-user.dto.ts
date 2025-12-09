@@ -1,8 +1,8 @@
 import { StringRequired } from "src/common/decorators";
 
 export class CreateUserDto {
-   @StringRequired('Tên')
-   fullName: string;
+   @StringRequired('Tên user')
+   username: string;
    
    @StringRequired('Email')
    email: string;
