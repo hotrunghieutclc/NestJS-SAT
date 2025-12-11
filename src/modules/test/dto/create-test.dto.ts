@@ -1,47 +1,13 @@
-import { ArrayNotRequired, BooleanNotRequired, DateNotRequired, NumberNotRequired, NumberRequired, ObjectNotRequired, StringNotRequired, StringRequired } from "src/common/decorators";
-import { AIEvualuation, TestResponse } from "src/models";
-
-export class AIEvualuationDto {
-    @StringRequired('Thông điệp')
-    evaluationText: string;
-}
-
-export class TestResponseDto {
-    @NumberRequired('Mã câu hỏi')
-    questionId: number
-
-    @BooleanNotRequired()
-    isCorrect: boolean;
-
-    @StringRequired('Mã chọn')
-    selectChoiceId: string;
-
-    @DateNotRequired()
-    responseTime?: Date
-
-    @NumberNotRequired('')
-    thetaAfter?: number
-}
+import { EnumRequired, NumberNotRequired, StringNotRequired } from "src/common/decorators";
+import { Mode } from "src/models/test.model";
 
 export class CreateTestDto {
-    @NumberRequired('Nguời dùng')
-    userId: number;
+    @EnumRequired(Mode, 'Chế độ')
+    mode: Mode;
 
-    @DateNotRequired()
-    startedAt?: Date;
+    @NumberNotRequired('Theta khởi tạo')
+    thetaInit?: number;
 
-    @DateNotRequired()
-    endedAt?: Date;
-
-    @NumberNotRequired('Chỉ số')
-    finalTheta?: number;
-
-    @StringNotRequired()
-    skill?: string;
-
-    @ObjectNotRequired(AIEvualuationDto)
-    aiEvualuation?: AIEvualuationDto;
-
-    @ArrayNotRequired(TestResponseDto)
-    testResponses?: TestResponseDto[]
+    @NumberNotRequired('Số lượng câu hỏi')
+    quantities?: number;
 }
