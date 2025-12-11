@@ -1,33 +1,3 @@
-<<<<<<< HEAD
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
-import { QuestionService } from './question.service';
-import { CreateQuestionDto } from './dto/create-question.dto';
-import { FilterQuestionDto } from './dto/filter-question.dto';
-
-@Controller('question')
-export class QuestionController {
-  constructor(private readonly questionService: QuestionService) {}
-
-  @Post('create')
-  async createQuestion(@Body() createQuestionDto: CreateQuestionDto) {
-    return await this.questionService.createQuestion(createQuestionDto);
-  }
-
-  @Get('all')
-  async getAllQuestions(@Query() filterQuestionDto: FilterQuestionDto) {
-    return await this.questionService.findAllQuestions(filterQuestionDto);
-  }
-
-  @Get('one/:id')
-  async getQuestionById(@Param('id') id: number) {
-    return await this.questionService.findQuestionById(id);
-  }
-
-  @Delete('delete/:id')
-  async deleteQuestion(@Param('id') id: number) {
-    return await this.questionService.delete(id);
-  }
-=======
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
@@ -40,13 +10,13 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger'
 @ApiTags('Questions')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
-@Controller('questions')
+@Controller('question')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) {}
 
     // ==================== QUESTION ENDPOINTS ====================
 
-    @Post()
+    @Post('create')
     @ApiOperation({ summary: 'Tạo câu hỏi mới' })
     create(@Body() createQuestionDto: CreateQuestionDto) {
         return this.questionService.create(createQuestionDto);
@@ -58,7 +28,7 @@ export class QuestionController {
         return this.questionService.createWithChoices(createDto);
     }
 
-    @Get()
+    @Get('all')
     @ApiOperation({ summary: 'Lấy danh sách câu hỏi' })
     @ApiQuery({ name: 'page', required: false, type: Number })
     @ApiQuery({ name: 'limit', required: false, type: Number })
@@ -81,19 +51,19 @@ export class QuestionController {
         );
     }
 
-    @Get(':id')
+    @Get('one/:id')
     @ApiOperation({ summary: 'Lấy chi tiết câu hỏi' })
     findOne(@Param('id', ParseIntPipe) id: number) {
         return this.questionService.findOne(id);
     }
 
-    @Patch(':id')
+    @Patch('update/:id')
     @ApiOperation({ summary: 'Cập nhật câu hỏi' })
     update(@Param('id', ParseIntPipe) id: number, @Body() updateQuestionDto: UpdateQuestionDto) {
         return this.questionService.update(id, updateQuestionDto);
     }
 
-    @Delete(':id')
+    @Delete('delete/:id')
     @ApiOperation({ summary: 'Xóa câu hỏi' })
     delete(@Param('id', ParseIntPipe) id: number) {
         return this.questionService.delete(id);
@@ -101,7 +71,7 @@ export class QuestionController {
 
     // ==================== QUESTION CHOICE ENDPOINTS ====================
 
-    @Post(':id/choices')
+    @Post('update/:id/choices')
     @ApiOperation({ summary: 'Thêm lựa chọn cho câu hỏi' })
     addChoice(
         @Param('id', ParseIntPipe) questionId: number,
@@ -110,13 +80,13 @@ export class QuestionController {
         return this.questionService.addChoice(questionId, createChoiceDto);
     }
 
-    @Get(':id/choices')
+    @Get('one/:id/choices')
     @ApiOperation({ summary: 'Lấy danh sách lựa chọn của câu hỏi' })
     getChoices(@Param('id', ParseIntPipe) questionId: number) {
         return this.questionService.getChoices(questionId);
     }
 
-    @Patch(':id/choices/:choiceId')
+    @Patch('update/:id/choices/:choiceId')
     @ApiOperation({ summary: 'Cập nhật lựa chọn' })
     updateChoice(
         @Param('id', ParseIntPipe) questionId: number,
@@ -126,7 +96,7 @@ export class QuestionController {
         return this.questionService.updateChoice(questionId, choiceId, updateChoiceDto);
     }
 
-    @Delete(':id/choices/:choiceId')
+    @Delete('delete/:id/choices/:choiceId')
     @ApiOperation({ summary: 'Xóa lựa chọn' })
     deleteChoice(
         @Param('id', ParseIntPipe) questionId: number,
@@ -145,5 +115,4 @@ export class QuestionController {
     ) {
         return this.questionService.setIRLParameter(questionId, body.a, body.b, body.c);
     }
->>>>>>> 2381e81f24a0c2faf66ca0175b91224ffc314060
 }

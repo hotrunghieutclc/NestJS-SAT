@@ -26,7 +26,24 @@ export class User extends Model<User> {
     @HasMany(() => TestSession)
     testSessions: TestSession[];
 
-    comparePassword(password: string): boolean {
-        return bcrypt.compareSync(password, this.password);
+    // Methods
+    comparePassword(password: string) {
+        const {password: passwordInDb} = this.get( {plain: true})
+        return bcrypt.compare(password, passwordInDb);
+    }
+
+    getUserWithoutPassword() {
+        const {password: _, ...rest } = this.get( {plain: true});
+        return rest
+    }
+
+    @BeforeValidate
+    static hashPassword(user: User) {
+        if(user.isNewRecord) {
+            const password = user.get('password');
+            const hashedPassword = bcrypt.hashSync(password, 10);
+
+            user.setDataValue('password', hashedPassword);
+        }
     }
 }

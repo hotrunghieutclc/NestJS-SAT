@@ -5,17 +5,17 @@ export class CreateQuestionWithChoicesDto {
     @StringRequired('Nội dung câu hỏi')
     content: string;
 
-    @StringNotRequired()
-    section?: string;
+    @StringRequired("Mục")
+    section: string;
 
-    @StringNotRequired()
-    skill?: string;
+    @StringRequired("Kỹ năng")
+    skill: string;
 
     @StringNotRequired()
     passage?: string;
 
-    @StringNotRequired()
-    difficulty?: string;
+    @StringRequired("Độ khó")
+    difficulty: string;
 
     @StringNotRequired()
     model?: string;

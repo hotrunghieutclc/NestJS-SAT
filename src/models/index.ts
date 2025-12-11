@@ -1,9 +1,18 @@
 export { AIEvualuation } from "./ai-evaluation.model";
+export { Explanation } from "./explaination.model";
+export { Feedback } from "./feedback.model";
+export { Skill } from "./skill.model";
+export { Analytic } from "./analytic.model";
 export { Cache } from "./cache.model";
+export { IRLParam } from "./irl-param.model";
 export { IRLParameter } from "./irl-parameter.model";
 export { Question } from "./question.model";
 export { QuestionChoice } from "./question-choice.model";
 export { TestResponse } from "./test-response.model";
 export { TestSession } from "./test-session.model";
 export { User } from "./user.model";
-
+export { Item } from "./item.model";
+export { ItemSkillLink } from "./item-skill-link.model";
+export { Passage } from "./passage.model";
+export { Test } from "./test.model";
+export { Answer } from "./answer.model";
