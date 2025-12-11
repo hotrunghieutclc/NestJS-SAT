@@ -1,5 +1,7 @@
 export { AIEvualuation } from "./ai-evaluation.model";
 export { Cache } from "./cache.model";
+export { Exam } from "./exam.model";
+export { ExamQuestion } from "./exam-question.model";
 export { IRLParameter } from "./irl-parameter.model";
 export { Question } from "./question.model";
 export { QuestionChoice } from "./question-choice.model";

@@ -11,6 +11,7 @@ import { CacheModule } from './modules/cache/cache.module';
 import { QuestionModule } from './modules/question/question.module';
 import { SeedModule } from './modules/seed/seed.module';
 import { TestModule } from './modules/test/test.module';
+import { ExamModule } from './modules/exam/exam.module';
 
 
 @Module({
