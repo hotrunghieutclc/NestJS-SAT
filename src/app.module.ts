@@ -4,6 +4,10 @@ import { SequelizeModule, SequelizeModuleOptions } from '@nestjs/sequelize';
 import { StartTimingMiddleware } from './common/middlewares/start-timing.middleware';
 import { JwtModule, } from '@nestjs/jwt';
 import { sequelizeConfig } from './config/sequelize.config';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { TestModule } from './modules/test/test.module';
+import { QuestionModule } from './modules/question/question.module';
 
 
 @Module({
@@ -24,6 +28,10 @@ import { sequelizeConfig } from './config/sequelize.config';
       }),
       global: true,
     }),
+    AuthModule,
+    UserModule,
+    TestModule,
+    QuestionModule,
   ],
 })
 export class AppModule implements NestModule{
